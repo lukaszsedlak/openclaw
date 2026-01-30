@@ -320,6 +320,12 @@ export const OpenClawSchema = z
             basePath: z.string().optional(),
             allowInsecureAuth: z.boolean().optional(),
             dangerouslyDisableDeviceAuth: z.boolean().optional(),
+            tabs: z
+              .object({
+                simplifiedMode: z.boolean().optional(),
+              })
+              .strict()
+              .optional(),
           })
           .strict()
           .optional(),

@@ -30,10 +30,15 @@ import type { DevicePairingList } from "./controllers/devices";
 import type { ExecApprovalRequest } from "./controllers/exec-approval";
 import type { NostrProfileFormState } from "./views/channels.nostr-profile-form";
 
+export type TabsConfig = {
+  simplifiedMode: boolean;
+};
+
 export type AppViewState = {
   settings: UiSettings;
   password: string;
   tab: Tab;
+  tabsConfig: TabsConfig;
   onboarding: boolean;
   basePath: string;
   connected: boolean;

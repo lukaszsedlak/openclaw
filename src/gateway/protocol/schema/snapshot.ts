@@ -35,6 +35,20 @@ export const SessionDefaultsSchema = Type.Object(
   { additionalProperties: false },
 );
 
+export const ControlUiTabsSchema = Type.Object(
+  {
+    simplifiedMode: Type.Optional(Type.Boolean()),
+  },
+  { additionalProperties: false },
+);
+
+export const ControlUiSchema = Type.Object(
+  {
+    tabs: Type.Optional(ControlUiTabsSchema),
+  },
+  { additionalProperties: false },
+);
+
 export const StateVersionSchema = Type.Object(
   {
     presence: Type.Integer({ minimum: 0 }),
@@ -52,6 +66,7 @@ export const SnapshotSchema = Type.Object(
     configPath: Type.Optional(NonEmptyString),
     stateDir: Type.Optional(NonEmptyString),
     sessionDefaults: Type.Optional(SessionDefaultsSchema),
+    controlUi: Type.Optional(ControlUiSchema),
   },
   { additionalProperties: false },
 );

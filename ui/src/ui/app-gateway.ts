@@ -6,8 +6,9 @@ import type { GatewayEventFrame, GatewayHelloOk } from "./gateway";
 import { GatewayBrowserClient } from "./gateway";
 import type { EventLogEntry } from "./app-events";
 import type { AgentsListResult, PresenceEntry, HealthSnapshot, StatusSummary } from "./types";
-import type { Tab } from "./navigation";
+import { SIMPLIFIED_MODE_TABS, type Tab } from "./navigation";
 import type { UiSettings } from "./storage";
+import { setTab } from "./app-settings";
 import { handleAgentEvent, resetToolStream, type AgentEventPayload } from "./app-tool-stream";
 import { flushChatQueueForEvent } from "./app-chat";
 import {
@@ -28,6 +29,10 @@ import type { ExecApprovalRequest } from "./controllers/exec-approval";
 import { loadAssistantIdentity } from "./controllers/assistant-identity";
 import { loadSessions } from "./controllers/sessions";
 
+type TabsConfig = {
+  simplifiedMode: boolean;
+};
+
 type GatewayHost = {
   settings: UiSettings;
   password: string;
@@ -39,6 +44,7 @@ type GatewayHost = {
   eventLogBuffer: EventLogEntry[];
   eventLog: EventLogEntry[];
   tab: Tab;
+  tabsConfig: TabsConfig;
   presenceEntries: PresenceEntry[];
   presenceError: string | null;
   presenceStatus: StatusSummary | null;
@@ -246,12 +252,19 @@ function handleGatewayEventUnsafe(host: GatewayHost, evt: GatewayEventFrame) {
   }
 }
 
+type ControlUiSnapshot = {
+  tabs?: {
+    simplifiedMode?: boolean;
+  };
+};
+
 export function applySnapshot(host: GatewayHost, hello: GatewayHelloOk) {
   const snapshot = hello.snapshot as
     | {
         presence?: PresenceEntry[];
         health?: HealthSnapshot;
         sessionDefaults?: SessionDefaultsSnapshot;
+        controlUi?: ControlUiSnapshot;
       }
     | undefined;
   if (snapshot?.presence && Array.isArray(snapshot.presence)) {
@@ -262,5 +275,14 @@ export function applySnapshot(host: GatewayHost, hello: GatewayHelloOk) {
   }
   if (snapshot?.sessionDefaults) {
     applySessionDefaults(host, snapshot.sessionDefaults);
+  }
+  if (snapshot?.controlUi?.tabs) {
+    const simplifiedMode = snapshot.controlUi.tabs.simplifiedMode ?? false;
+    host.tabsConfig = { simplifiedMode };
+
+    // Redirect to chat if current tab is hidden in simplified mode
+    if (simplifiedMode && !(SIMPLIFIED_MODE_TABS as readonly string[]).includes(host.tab)) {
+      setTab(host as unknown as Parameters<typeof setTab>[0], "chat");
+    }
   }
 }

@@ -186,3 +186,25 @@ export function subtitleForTab(tab: Tab) {
       return "";
   }
 }
+
+/** Tabs visible in simplified mode */
+export const SIMPLIFIED_MODE_TABS: readonly Tab[] = ["chat", "cron"] as const;
+
+/** Filter tab groups based on simplified mode */
+export function filterTabGroups(
+  groups: typeof TAB_GROUPS,
+  simplifiedMode: boolean
+): Array<{ label: string; tabs: Tab[] }> {
+  if (!simplifiedMode) {
+    return groups.map((g) => ({ label: g.label, tabs: [...g.tabs] }));
+  }
+
+  return groups
+    .map((group) => ({
+      label: group.label,
+      tabs: group.tabs.filter((tab) =>
+        (SIMPLIFIED_MODE_TABS as readonly string[]).includes(tab)
+      ) as Tab[],
+    }))
+    .filter((group) => group.tabs.length > 0);
+}

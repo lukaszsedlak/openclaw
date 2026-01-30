@@ -36,6 +36,9 @@ export function buildGatewaySnapshot(): Snapshot {
       mainSessionKey,
       scope,
     },
+    controlUi: {
+      tabs: cfg.gateway?.controlUi?.tabs,
+    },
   };
 }
 

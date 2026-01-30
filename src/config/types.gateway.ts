@@ -61,6 +61,11 @@ export type TalkConfig = {
   interruptOnSpeech?: boolean;
 };
 
+export type GatewayControlUiTabsConfig = {
+  /** Enable simplified mode showing only Chat and Cron tabs. */
+  simplifiedMode?: boolean;
+};
+
 export type GatewayControlUiConfig = {
   /** If false, the Gateway will not serve the Control UI (default /). */
   enabled?: boolean;
@@ -70,6 +75,8 @@ export type GatewayControlUiConfig = {
   allowInsecureAuth?: boolean;
   /** DANGEROUS: Disable device identity checks for the Control UI (default: false). */
   dangerouslyDisableDeviceAuth?: boolean;
+  /** Tab visibility configuration for the Control UI dashboard. */
+  tabs?: GatewayControlUiTabsConfig;
 };
 
 export type GatewayAuthMode = "token" | "password";
