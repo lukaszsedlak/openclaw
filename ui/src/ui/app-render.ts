@@ -178,6 +178,7 @@ export function renderApp(state: AppViewState) {
             </div>
           `;
         })}
+        ${state.tabsConfig.simplifiedMode ? nothing : html`
         <div class="nav-group nav-group--links">
           <div class="nav-label nav-label--static">
             <span class="nav-label__text">Resources</span>
@@ -195,6 +196,7 @@ export function renderApp(state: AppViewState) {
             </a>
           </div>
         </div>
+        `}
       </aside>
       <main class="content ${isChat ? "content--chat" : ""}">
         <section class="content-header">

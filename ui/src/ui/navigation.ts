@@ -188,7 +188,14 @@ export function subtitleForTab(tab: Tab) {
 }
 
 /** Tabs visible in simplified mode */
-export const SIMPLIFIED_MODE_TABS: readonly Tab[] = ["chat", "cron"] as const;
+export const SIMPLIFIED_MODE_TABS: readonly Tab[] = [
+  "chat",
+  "overview",
+  "channels",
+  "instances",
+  "sessions",
+  "cron",
+] as const;
 
 /** Filter tab groups based on simplified mode */
 export function filterTabGroups(
