@@ -276,13 +276,12 @@ export function applySnapshot(host: GatewayHost, hello: GatewayHelloOk) {
   if (snapshot?.sessionDefaults) {
     applySessionDefaults(host, snapshot.sessionDefaults);
   }
-  if (snapshot?.controlUi?.tabs) {
-    const simplifiedMode = snapshot.controlUi.tabs.simplifiedMode ?? false;
-    host.tabsConfig = { simplifiedMode };
+  // Always set tabsConfig from snapshot (default to simplifiedMode: false if not present)
+  const simplifiedMode = snapshot?.controlUi?.tabs?.simplifiedMode ?? false;
+  host.tabsConfig = { simplifiedMode };
 
-    // Redirect to chat if current tab is hidden in simplified mode
-    if (simplifiedMode && !(SIMPLIFIED_MODE_TABS as readonly string[]).includes(host.tab)) {
-      setTab(host as unknown as Parameters<typeof setTab>[0], "chat");
-    }
+  // Redirect to chat if current tab is hidden in simplified mode
+  if (simplifiedMode && !(SIMPLIFIED_MODE_TABS as readonly string[]).includes(host.tab)) {
+    setTab(host as unknown as Parameters<typeof setTab>[0], "chat");
   }
 }
